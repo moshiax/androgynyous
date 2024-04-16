@@ -1,3 +1,62 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Выбор страницы</title>
+    <style>
+        /* Стили для закрепленного элемента */
+        #pageLinks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Чтобы оставался поверх других элементов */
+            overflow-x: auto; /* Добавляем горизонтальную прокрутку, если ссылок много */
+            white-space: nowrap; /* Запрещаем переносить текст на новую строку */
+        }
+
+        #pageLinks a {
+            margin-right: 10px; /* Отступ между ссылками */
+            text-decoration: none; /* Убираем подчеркивание у ссылок */
+            color: #000000; /* Цвет текста ссылок */
+            font-size: 16px; /* Размер шрифта ссылок */
+        }
+
+        #pageLinks a:hover {
+            color: #007bff; /* Цвет текста ссылки при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div id="pageLinks">
+        <!-- Генерируем ряд ссылок -->
+        <script>
+            // Функция для перенаправления на соответствующую страницу
+            function goToPage(pageNumber) {
+                window.location.href = 'messages' + pageNumber + '.html';
+            }
+
+            // Создаем ссылки на страницы от 2 до 125
+            for (var i = 2; i <= 125; i++) {
+                var pageLink = document.createElement('a');
+                pageLink.textContent = i;
+                pageLink.href = 'javascript:void(0);'; // JavaScript:void(0); чтобы избежать перезагрузки страницы
+                pageLink.addEventListener('click', function() {
+                    var pageNumber = parseInt(this.textContent);
+                    goToPage(pageNumber);
+                });
+                document.getElementById('pageLinks').appendChild(pageLink);
+            }
+        </script>
+    </div>
+    
+    <!-- Дополнительный контент для демонстрации прокрутки -->
+    <div style="height: 20px; background-color: #f5f5f5; padding: 20px;">
+        <p>Scroll down to see the fixed element in action.</p>
+    </div>
 <!DOCTYPE html>
 <html>
 
@@ -35,7 +94,7 @@
 
     <div class="history">
 
-     <a class="pagination block_link" href="messages.html">
+     <a class="pagination block_link" href="index.html">
 Previous messages
      </a>
 
