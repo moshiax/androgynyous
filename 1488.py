@@ -1,40 +1,30 @@
 import os
-import re
-from tqdm import tqdm
-from urllib.parse import unquote
 
-def rename_files_with_hashtag(root_dir):
-    files_with_hashtag = []
-    for dirpath, dirnames, filenames in os.walk(root_dir):
-        for filename in filenames:
-            if '#' in filename:
-                files_with_hashtag.append(os.path.join(dirpath, filename))
+def search_files_with_hash_symbol(directory='.'):
+    # Получаем абсолютный путь текущей директории
+    directory = os.path.abspath(directory)
 
-    with tqdm(total=len(files_with_hashtag), desc='Renaming files') as pbar:
-        for file_path in files_with_hashtag:
-            new_file_path = unquote(file_path).replace('#', '')
-            try:
-                os.rename(file_path, new_file_path)
-            except FileNotFoundError:
-                print(f"File not found: {file_path}")
-            pbar.update(1)
+    # Создаем список для хранения найденных файлов
+    found_files = []
 
-def replace_hashtag_in_html_files(root_dir):
-    html_files = [f for f in os.listdir(root_dir) if f.endswith('.html')]
-    with tqdm(total=len(html_files), desc='Processing HTML files') as pbar:
-        for html_file in html_files:
-            file_path = os.path.join(root_dir, html_file)
-            try:
-                with open(file_path, 'r') as file:
-                    html_content = file.read()
-                modified_html_content = re.sub(r'#', '', html_content)
-                with open(file_path, 'w') as file:
-                    file.write(modified_html_content)
-            except FileNotFoundError:
-                print(f"File not found: {file_path}")
-            pbar.update(1)
+    # Проходим по всем подпапкам и файлам в текущей директории и ее подпапках
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            # Проверяем, содержится ли символ "#" в названии файла
+            if '#' in file:
+                # Если да, добавляем путь к файлу в список найденных файлов
+                found_files.append(os.path.join(root, file))
+
+    return found_files
 
 if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))  # Получить путь к текущей директории скрипта
-    rename_files_with_hashtag(current_dir)
-    replace_hashtag_in_html_files(current_dir)
+    # Вызываем функцию с параметром текущей директории
+    found_files = search_files_with_hash_symbol()
+
+    # Выводим найденные файлы
+    if found_files:
+        print("Найдены файлы с символом '#' в названии:")
+        for file in found_files:
+            print(file)
+    else:
+        print("Файлы с символом '#' в названии не найдены.")
